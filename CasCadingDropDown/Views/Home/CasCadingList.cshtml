@@ -1,0 +1,155 @@
+﻿
+@{
+    ViewData["Title"] = "CasCadingList";
+}
+
+    <div class="container">
+        <div>
+            <h4>Add Student</h4>
+        </div>
+        <form >
+
+            <div class="mb-2">
+
+                <div >
+                    <label>Full Name</label>
+                    <input class="" id="full_name" />
+
+                </div>
+
+
+
+                <div class="">
+                    <select id="countrylist" asp-items="@ViewBag.Countries ">
+
+                        <option>select Country</option>
+                    </select>
+                </div>
+
+                <div >
+                    <select id="citylist">
+
+                        <option>select City</option>
+                    </select>
+                </div>
+
+
+                <div class="mt-2" >
+
+                    <input type="button" class="btn btn-primary" id="save_student_info" value="Add Student" />
+
+                </div>
+
+            </div>
+
+
+
+        </form>
+
+
+    </div>
+
+
+@section  Scripts {
+
+
+    <script>
+
+
+
+
+
+         $(document).ready(function () {
+            var items = "<option value='0'>Select</option>";
+            $("#citylist").html(items);
+        });
+
+        //Bind City dropdownlist
+        $("#countrylist").change(function () {
+            var countryId = $("#countrylist").val();
+            var url = "/Home/LoadCity";
+
+            $.getJSON(url, { CountryId: countryId }, function (data) {  
+                var item = "";
+                $("#citylist").empty();
+                $.each(data, function (i, city) {
+                    item += '<option value="' + city.value + '">' + city.text + '</option>'
+                });
+                $("#citylist").html(item);
+            });
+        });
+
+
+
+
+
+
+          $(function () {
+            $("#save_student_info").click(function () {
+                var formData = new FormData();
+                formData.append("Name", $("#full_name").val());
+                formData.append("CountryId", $("#countrylist").val());
+                formData.append("StateId", $("#citylist").val());
+
+                
+                $.ajax({
+                    url: "/Home/CasCadingList",
+                    method: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formData,
+                    success: function (response) {
+                       window.actio
+                       
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            });
+        });
+
+
+
+
+
+
+
+
+        //$(document).ready(function () {
+
+        //    $("#country_list").change(function () {
+
+        //        $("#state_list").empty();
+        //        $("#city_list").empty();
+
+        //        $.ajax({
+
+
+        //          url: "/Home/LoadState",
+
+        //            method: 'GET',
+                    
+        //           // dataType: 'json',
+        //            data: { Id: $("#country_list").val },
+        //            success: function (states) {
+        //                $("#state_list").append('<option value=" ' +  -1 + '">'+ "select Country" + '</option> ')
+        //                $.each(states, function (i, state) {
+
+        //                    $("#state_list").append('<option value=" ' + state.val + '">' + "select Country" + state.text + '</option> ')
+
+        //                });
+        //            },
+
+        //            error: function (ex) {
+
+        //                console.log(ex);
+        //            }
+        //        })
+        //    })
+
+        //});
+
+    </script>
+}
